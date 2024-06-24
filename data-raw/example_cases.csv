@@ -1,0 +1,14 @@
+id,adm3,outcome,date_symptoms,date_hospital,date_outcome
+id_01,District 1,Survived,2024/01/01,2024/01/05,2024/01/07
+id_02,District 1,Survived,2024/01/07,2024/01/10,2024/01/15
+id_03,District 1,Died,2024/01/07,2024/01/11,2024/01/13
+id_04,District 1,Died,2024/01/12,2024/01/19,2024/01/22
+id_05,District 1,Died,2024/01/14,2024/01/23,2024/01/28
+id_06,District 1,Survived,2024/01/12,2024/01/19,2024/01/20
+id_07,District 1,Survived,2024/01/12,2024/01/20,2024/01/21
+id_08,District 1,Survived,2024/01/16,2024/01/24,2024/01/25
+id_09,District 2,Died,2024/01/03,2024/01/12,2024/01/14
+id_10,District 2,Died,2024/01/09,2024/01/17,2024/01/20
+id_11,District 2,Survived,2024/01/08,2024/01/17,2024/01/18
+id_12,District 2,Survived,2024/01/07,2024/01/15,2024/01/19
+id_13,District 2,Survived,2024/01/13,2024/01/19,2024/01/20

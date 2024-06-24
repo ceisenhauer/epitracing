@@ -1,0 +1,16 @@
+Package: epitracing
+Title: Tools to visualize and assess transmission networks
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Catherine",
+           family = "Eisenhauer",
+           role = c("aut", "cre"),
+           email = "caeisenhauer@example.com"))
+Description: epitracing is designed to help field epidemiologists visualize and assess transmission networks. This includes creation of both interactive and static transmission network visualizations with a variaty of formatting options. epitracing can also create excel based visualizations of transmission chains, allowing epidemiologists to continue data collection after the document is created.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.2
+Depends: 
+    R (>= 2.10)
+LazyData: true
