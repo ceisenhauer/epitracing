@@ -28,6 +28,7 @@ map_case <- function(case_id, order_id, cases, verbose = FALSE) {
 
 map_cases <- function(cases, pairs) {
   order_id <- 1
+  cases$order_id <- NA_integer_
 
   cases <- cases[order(cases$date_symptoms), ]
 
