@@ -4,16 +4,21 @@
 #' output.
 #'
 #' @param cases `df` Data frame of case data.
+#' @param pairs `df` Data frame with infector infectee pairs.
 #' @param var_id `chr` Column name for case id.
 #' @param var_infector `chr` Column name for infector id.
 #' @param var_order `chr` Column name for the variable used to visually order cases.
 #' @param verbose `bool` Whether to print output on cases being mapped.
-map_cases <- function(cases, var_id = 'id', var_infector = 'infector_id', 
+#' 
+#' @importFrom dplyr distinct left_join
+map_cases <- function(cases, pairs, var_id = 'id', var_infector = 'infector_id', 
                       var_order = 'date_symptoms', verbose = FALSE) {
   order_id <- 1
   cases$order_id <- NA_integer_
 
-	cases <- as.data.frame(cases)
+	cases <- as.data.frame(cases) |>
+    dplyr::left_join(pairs)
+
   cases <- cases[order(cases[[var_order]]), ]
 
   index_cases <- cases[which(cases[[var_infector]] == "" | is.na(cases[[var_infector]])), var_id]
@@ -23,6 +28,7 @@ map_cases <- function(cases, var_id = 'id', var_infector = 'infector_id',
 									  var_infector = var_infector,
                     order_id = order_id,
                     cases = cases,
+                    pairs = pairs,
                     verbose = verbose)
     
     cases <- out$cases
@@ -30,6 +36,9 @@ map_cases <- function(cases, var_id = 'id', var_infector = 'infector_id',
   }
 
   cases <- cases[order(as.numeric(row.names(cases))), ]
+  cases[[var_infector]] <- NULL
+  cases <- dplyr::distinct(cases, .data[[var_id]], .keep_all = TRUE)
+
   return(cases)
 }
 
@@ -42,9 +51,10 @@ map_cases <- function(cases, var_id = 'id', var_infector = 'infector_id',
 #' @param var_infector `chr` Column name for infector id.
 #' @param order_id `int` Case order in dataset.
 #' @param cases `df` Data frame of case data.
+#' @param pairs `df` Data frame with infector infectee pairs.
 #' @param var_id `chr` Column name for case id.
 #' @param verbose `bool` Whether to print output on cases being mapped.
-map_case <- function(case_id, order_id, cases, var_id = 'id', var_infector = 'infector_id',
+map_case <- function(case_id, order_id, cases, pairs, var_id = 'id', var_infector = 'infector_id',
                      verbose = FALSE) {
   if (verbose) {
     writeLines(paste('mapping case', case_id))
@@ -66,6 +76,7 @@ map_case <- function(case_id, order_id, cases, var_id = 'id', var_infector = 'in
 									  var_infector = var_infector,
                     order_id = order_id,
                     cases = cases,
+                    pairs = pairs,
                     verbose = verbose)
     
     cases <- out$cases

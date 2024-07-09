@@ -7,6 +7,7 @@
 #'
 #' @param cases `df` Dataframe of case information. This dataset should contain information on 
 #'   outcome, onset date, transition (hospitalization) date, and outcome date, and infector.
+#' @param pairs `df` Dataframe with infector infectee pairs.
 #' @param height `num` Height of bars representing cases.
 #' @param gap `num` Gap between bars.
 #' @param offset `num` Offset between the beginning of a bar and the link connecting it to any
@@ -28,8 +29,9 @@
 #' @param verbose `bool` Whether to print output on cases being mapped.
 #' 
 #' @examples
-#' cases <- left_join(example_cases, example_pairs) # add infector information
-#' plot_chains_linear(cases)
+#' example_cases
+#' example_pairs
+#' plot_chains_linear(example_cases, example_pairs)
 #'
 #' @importFrom dplyr across arrange mutate row_number filter select right_join any_of case_when
 #' @importFrom epiplots date_axis theme_clean
@@ -37,7 +39,7 @@
 #' @importFrom rlang .data
 #' @export
 plot_chains_linear <- function(
-  cases, height = 5, gap = height / 2, offset = 1, 
+  cases, pairs, height = 5, gap = height / 2, offset = 1, 
   var_id = 'id', var_infector = 'infector_id', var_order = var_symptoms, 
   var_outcome_status = 'outcome',
   var_symptoms = 'date_symptoms', var_transition = 'date_hospital', var_outcome = 'date_outcome', 
@@ -46,6 +48,7 @@ plot_chains_linear <- function(
   date_breaks = '1 week', verbose = FALSE) {
 
   tmp <- map_cases(cases,
+                   pairs,
                    var_id = var_id,
                    var_infector = var_infector,
                    var_order = var_order,
@@ -70,10 +73,10 @@ plot_chains_linear <- function(
       label = paste0('  ', .data[[var_id]]))
 
   # add connections
-  pairs <- cases[ , c(var_id, var_infector)]
+  #pairs <- cases[ , c(var_id, var_infector)]
 
   tmp <- tmp |>
-    dplyr::filter(.data[[var_id]] %in% unique(.data[[var_infector]])) |>
+    dplyr::filter(.data[[var_id]] %in% unique(pairs[[var_infector]])) |>
     dplyr::mutate(horizontal_1 = .data$x_1 + offset,
                   vertical_1 = .data$y_2) |>
     dplyr::select('{var_infector}' := dplyr::any_of(var_id), 'vertical_1', 'horizontal_1') |>
@@ -89,11 +92,13 @@ plot_chains_linear <- function(
                                        xend = .data$horizontal_2,
                                        y = .data$vertical_2,
                                        yend = .data$vertical_2),
+                          alpha = 0.5,
                           color = color_links) +
     ggplot2::geom_segment(ggplot2::aes(x = .data$horizontal_1,
                                        xend = .data$horizontal_1,
                                        y = .data$vertical_1,
                                        yend = .data$vertical_2),
+                          alpha = 0.5,
                           color = color_links) +
     ggplot2::geom_rect(ggplot2::aes(xmin = .data$x_1,
                                     xmax = .data$x_2,
