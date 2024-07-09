@@ -19,6 +19,9 @@ plot_chains_linear(
   fill_infected = "#EEEEEE",
   fills_outcome = c("#000000", "#819CBB"),
   color_links = "#000000",
+  font_face = "bold",
+  font_size = 5,
+  font_color = "#000000",
   date_breaks = "1 week",
   verbose = FALSE
 )
@@ -53,6 +56,12 @@ secondary cases.}
 \item{fills_outcome}{\verb{chr vct} Colors to use for the second part of the bar, indicating outcome.}
 
 \item{color_links}{\code{chr} Color for lines linking primary and secondary cases.}
+
+\item{font_face}{\code{chr} Font face of id labels.}
+
+\item{font_size}{\code{chr} Text size of id labels.}
+
+\item{font_color}{\code{chr} Text color of id labels.}
 
 \item{date_breaks}{\code{chr} Breaks to use for date axis.}
 

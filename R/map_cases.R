@@ -13,13 +13,14 @@ map_cases <- function(cases, var_id = 'id', var_infector = 'infector_id',
   order_id <- 1
   cases$order_id <- NA_integer_
 
-  cases <- as.data.frame(cases)
-
+	cases <- as.data.frame(cases)
   cases <- cases[order(cases[[var_order]]), ]
 
   index_cases <- cases[which(cases[[var_infector]] == "" | is.na(cases[[var_infector]])), var_id]
   for (case in index_cases) {
     out <- map_case(case_id = case,
+										var_id = var_id,
+									  var_infector = var_infector,
                     order_id = order_id,
                     cases = cases,
                     verbose = verbose)
@@ -53,13 +54,16 @@ map_case <- function(case_id, order_id, cases, var_id = 'id', var_infector = 'in
   order_id <- order_id + 1
 
   secondaries <- cases[cases[[var_infector]] == case_id, var_id]
+  secondaries <- secondaries[which(!is.na(secondaries))]
 
   if (verbose) {
-    writeLines(paste('mapping secondaries:', paste0(secondaries, collapse = ' ')))
+    writeLines(paste('secondaries:', paste0(secondaries, collapse = ' ')))
   }
 
   for (s in secondaries) {
     out <- map_case(case_id = s,
+										var_id = var_id,
+									  var_infector = var_infector,
                     order_id = order_id,
                     cases = cases,
                     verbose = verbose)

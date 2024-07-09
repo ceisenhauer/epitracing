@@ -21,6 +21,9 @@
 #' @param fill_infected `chr` Color to use for initial infected period of the bar.
 #' @param fills_outcome `chr vct` Colors to use for the second part of the bar, indicating outcome.
 #' @param color_links `chr` Color for lines linking primary and secondary cases.
+#' @param font_face `chr` Font face of id labels.
+#' @param font_size `chr` Text size of id labels.
+#' @param font_color `chr` Text color of id labels.
 #' @param date_breaks `chr` Breaks to use for date axis.
 #' @param verbose `bool` Whether to print output on cases being mapped.
 #' 
@@ -39,6 +42,7 @@ plot_chains_linear <- function(
   var_outcome_status = 'outcome',
   var_symptoms = 'date_symptoms', var_transition = 'date_hospital', var_outcome = 'date_outcome', 
   fill_infected = '#EEEEEE', fills_outcome = c('#000000', '#819CBB'), color_links = '#000000',
+  font_face = 'bold', font_size = 5, font_color = '#000000',
   date_breaks = '1 week', verbose = FALSE) {
 
   tmp <- map_cases(cases,
@@ -72,8 +76,8 @@ plot_chains_linear <- function(
     dplyr::filter(.data[[var_id]] %in% unique(.data[[var_infector]])) |>
     dplyr::mutate(horizontal_1 = .data$x_1 + offset,
                   vertical_1 = .data$y_2) |>
-    dplyr::select(infector_id = dplyr::any_of(var_id), .data$vertical_1, .data$horizontal_1) |>
-    dplyr::right_join(pairs) |>
+    dplyr::select('{var_infector}' := dplyr::any_of(var_id), 'vertical_1', 'horizontal_1') |>
+    dplyr::right_join(pairs, relationship = 'many-to-many') |>
     dplyr::right_join(tmp) |>
     dplyr::mutate(horizontal_2 = dplyr::case_when(!is.na(.data$horizontal_1) ~ .data$x_1),
                   vertical_2 = dplyr::case_when(!is.na(.data$vertical_1) ~ .data$y_mid))
@@ -81,6 +85,16 @@ plot_chains_linear <- function(
 
   tmp |>
     ggplot2::ggplot() +
+    ggplot2::geom_segment(ggplot2::aes(x = .data$horizontal_1,
+                                       xend = .data$horizontal_2,
+                                       y = .data$vertical_2,
+                                       yend = .data$vertical_2),
+                          color = color_links) +
+    ggplot2::geom_segment(ggplot2::aes(x = .data$horizontal_1,
+                                       xend = .data$horizontal_1,
+                                       y = .data$vertical_1,
+                                       yend = .data$vertical_2),
+                          color = color_links) +
     ggplot2::geom_rect(ggplot2::aes(xmin = .data$x_1,
                                     xmax = .data$x_2,
                                     ymin = .data$y_1,
@@ -93,19 +107,12 @@ plot_chains_linear <- function(
                                     ymax = .data$y_2,
                                     fill = .data[[var_outcome_status]]),
                        color = color_links) +
-    ggplot2::geom_segment(ggplot2::aes(x = .data$horizontal_1,
-                                       xend = .data$horizontal_2,
-                                       y = .data$vertical_2,
-                                       yend = .data$vertical_2),
-                          color = color_links) +
-    ggplot2::geom_segment(ggplot2::aes(x = .data$horizontal_1,
-                                       xend = .data$horizontal_1,
-                                       y = .data$vertical_1,
-                                       yend = .data$vertical_2),
-                          color = color_links) +
     ggplot2::geom_text(ggplot2::aes(x = .data$x_1,
                                     y = .data$y_mid,
                                     label = .data$label),
+                       fontface = font_face,
+                       color = font_color,
+                       size = font_size,
                        hjust = 0) +
     epiplots::date_axis(date_breaks = date_breaks) +
     ggplot2::scale_fill_manual(name = '',
