@@ -12,13 +12,15 @@ plot_chains_linear(
   var_id = "id",
   var_infector = "infector_id",
   var_order = var_symptoms,
+  var_outcome_status = "outcome",
   var_symptoms = "date_symptoms",
   var_transition = "date_hospital",
   var_outcome = "date_outcome",
   fill_infected = "#EEEEEE",
   fills_outcome = c("#000000", "#819CBB"),
   color_links = "#000000",
-  date_breaks = "1 week"
+  date_breaks = "1 week",
+  verbose = FALSE
 )
 }
 \arguments{
@@ -38,6 +40,8 @@ secondary cases.}
 
 \item{var_order}{\code{chr} Column name for the variable used to visually order cases.}
 
+\item{var_outcome_status}{\code{chr} Column name for outcome status.}
+
 \item{var_symptoms}{\code{chr} Column name for symptom onset date.}
 
 \item{var_transition}{\code{chr} Column name for transition (hospitalization) date.}
@@ -51,6 +55,8 @@ secondary cases.}
 \item{color_links}{\code{chr} Color for lines linking primary and secondary cases.}
 
 \item{date_breaks}{\code{chr} Breaks to use for date axis.}
+
+\item{verbose}{\code{bool} Whether to print output on cases being mapped.}
 }
 \description{
 Plots transmission trees with a linear layout, showing infections and case
