@@ -6,6 +6,7 @@
 \usage{
 plot_chains_linear(
   cases,
+  pairs,
   height = 5,
   gap = height/2,
   offset = 1,
@@ -29,6 +30,8 @@ plot_chains_linear(
 \arguments{
 \item{cases}{\code{df} Dataframe of case information. This dataset should contain information on
 outcome, onset date, transition (hospitalization) date, and outcome date, and infector.}
+
+\item{pairs}{\code{df} Dataframe with infector infectee pairs.}
 
 \item{height}{\code{num} Height of bars representing cases.}
 
@@ -74,7 +77,8 @@ top left to bottom right. \strong{Note} the function expects case data to have a
 id of the infector, if your pairs are stored in a separate dataset, you must join them first.
 }
 \examples{
-cases <- left_join(example_cases, example_pairs) # add infector information
-plot_chains_linear(cases)
+example_cases
+example_pairs
+plot_chains_linear(example_cases, example_pairs)
 
 }

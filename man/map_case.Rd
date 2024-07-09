@@ -8,6 +8,7 @@ map_case(
   case_id,
   order_id,
   cases,
+  pairs,
   var_id = "id",
   var_infector = "infector_id",
   verbose = FALSE
@@ -19,6 +20,8 @@ map_case(
 \item{order_id}{\code{int} Case order in dataset.}
 
 \item{cases}{\code{df} Data frame of case data.}
+
+\item{pairs}{\code{df} Data frame with infector infectee pairs.}
 
 \item{var_id}{\code{chr} Column name for case id.}
 

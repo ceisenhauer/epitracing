@@ -6,6 +6,7 @@
 \usage{
 map_cases(
   cases,
+  pairs,
   var_id = "id",
   var_infector = "infector_id",
   var_order = "date_symptoms",
@@ -14,6 +15,8 @@ map_cases(
 }
 \arguments{
 \item{cases}{\code{df} Data frame of case data.}
+
+\item{pairs}{\code{df} Data frame with infector infectee pairs.}
 
 \item{var_id}{\code{chr} Column name for case id.}
 
