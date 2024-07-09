@@ -14,6 +14,7 @@
 #' @param var_id `chr` Column name for case id.
 #' @param var_infector `chr` Column name for infector id.
 #' @param var_order `chr` Column name for the variable used to visually order cases.
+#' @param var_outcome_status `chr` Column name for outcome status.
 #' @param var_symptoms `chr` Column name for symptom onset date.
 #' @param var_transition `chr` Column name for transition (hospitalization) date. 
 #' @param var_outcome `chr` Colun name for outcome date.
@@ -21,6 +22,7 @@
 #' @param fills_outcome `chr vct` Colors to use for the second part of the bar, indicating outcome.
 #' @param color_links `chr` Color for lines linking primary and secondary cases.
 #' @param date_breaks `chr` Breaks to use for date axis.
+#' @param verbose `bool` Whether to print output on cases being mapped.
 #' 
 #' @examples
 #' cases <- left_join(example_cases, example_pairs) # add infector information
@@ -33,12 +35,18 @@
 #' @export
 plot_chains_linear <- function(
   cases, height = 5, gap = height / 2, offset = 1, 
-  var_id = 'id', var_infector = 'infector_id', var_order = var_symptoms,
+  var_id = 'id', var_infector = 'infector_id', var_order = var_symptoms, 
+  var_outcome_status = 'outcome',
   var_symptoms = 'date_symptoms', var_transition = 'date_hospital', var_outcome = 'date_outcome', 
   fill_infected = '#EEEEEE', fills_outcome = c('#000000', '#819CBB'), color_links = '#000000',
-  date_breaks = '1 week') {
+  date_breaks = '1 week', verbose = FALSE) {
 
-  tmp <- map_cases(cases)
+  tmp <- map_cases(cases,
+                   var_id = var_id,
+                   var_infector = var_infector,
+                   var_order = var_order,
+                   verbose = verbose)
+
   tmp <- tmp |>
     dplyr::arrange(.data$order_id) |>
     dplyr::mutate(
@@ -83,7 +91,7 @@ plot_chains_linear <- function(
                                     xmax = .data$x_3,
                                     ymin = .data$y_1,
                                     ymax = .data$y_2,
-                                    fill = .data$outcome),
+                                    fill = .data[[var_outcome_status]]),
                        color = color_links) +
     ggplot2::geom_segment(ggplot2::aes(x = .data$horizontal_1,
                                        xend = .data$horizontal_2,
